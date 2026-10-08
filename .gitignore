@@ -1,0 +1,7 @@
+private-data/
+dist/
+preview/
+node_modules/
+.env*
+*.zip
+.DS_Store

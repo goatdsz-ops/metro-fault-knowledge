@@ -1,0 +1,1 @@
+{"name":"metro-fault-knowledge-github","private":true,"version":"1.0.0","type":"module","engines":{"node":">=22"},"scripts":{"build":"node scripts/build.mjs","preview":"node scripts/build.mjs --preview","test":"node --test tests/*.test.mjs"}}

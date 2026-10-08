@@ -1,0 +1,92 @@
+name: 审核并发布知识库
+on:
+  push:
+    branches: [main]
+  issues:
+    types: [labeled, edited]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    if: github.event_name != 'issues' || github.event.action == 'edited' || github.event.label.name == 'kb-approved' || github.event.label.name == 'kb-withdrawn'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    outputs:
+      publish: ${{ steps.decision.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 验证脚本
+        run: npm test
+      - name: 处理审核事件
+        if: github.event_name == 'issues'
+        id: review
+        run: node scripts/review.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 保存审核快照
+        if: steps.review.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/approved
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update reviewed knowledge snapshots'
+            pushed=false
+            for attempt in 1 2 3; do
+              if git push; then pushed=true; break; fi
+              git pull --rebase
+            done
+            if [ "$pushed" != 'true' ]; then exit 1; fi
+          fi
+      - name: 判断是否发布
+        id: decision
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          CHANGED: ${{ steps.review.outputs.changed }}
+        run: |
+          if [ "$EVENT_NAME" != 'issues' ] || [ "$CHANGED" = 'true' ]; then
+            echo 'publish=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'publish=false' >> "$GITHUB_OUTPUT"
+          fi
+  deploy:
+    needs: review
+    if: needs.review.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Always build the latest committed snapshots after acquiring the deployment slot.
+      # Superseded pending deployments do not lose approved content.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: 发布到GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

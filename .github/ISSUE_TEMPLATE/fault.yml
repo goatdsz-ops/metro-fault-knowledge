@@ -1,0 +1,173 @@
+{
+  "name": "登记故障案例 / 复盘经验",
+  "description": "记录故障现象、根因与处理步骤，审核后发布",
+  "title": "[知识库] ",
+  "labels": [
+    "kb-pending"
+  ],
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "提交后进入审核队列，维护人员添加 kb-approved 标签后才会更新网站。请勿填写密码、密钥或不允许在本仓库保存的信息。"
+      }
+    },
+    {
+      "type": "dropdown",
+      "id": "kind",
+      "attributes": {
+        "label": "记录类型",
+        "options": [
+          "故障案例",
+          "复盘经验"
+        ],
+        "default": 0
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "dropdown",
+      "id": "category",
+      "attributes": {
+        "label": "故障类别",
+        "options": [
+          "链路中断",
+          "设备故障",
+          "配置变更",
+          "动力电源",
+          "割接施工",
+          "外线",
+          "系统平台",
+          "用户侧",
+          "其他"
+        ]
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "input",
+      "id": "device",
+      "attributes": {
+        "label": "设备系统",
+        "placeholder": "如 OLT、BRAS、CR、OTN；含型号和版本更有帮助"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "input",
+      "id": "caseTitle",
+      "attributes": {
+        "label": "案例标题",
+        "placeholder": "例如：某机房OLT PON口用户掉零"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "input",
+      "id": "scope",
+      "attributes": {
+        "label": "机房与影响范围",
+        "placeholder": ""
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "input",
+      "id": "occurred",
+      "attributes": {
+        "label": "发生时间",
+        "placeholder": "YYYY-MM-DD HH:mm"
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "symptom",
+      "attributes": {
+        "label": "故障现象与告警",
+        "placeholder": ""
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "analysis",
+      "attributes": {
+        "label": "排查过程",
+        "placeholder": ""
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "cause",
+      "attributes": {
+        "label": "根因分析",
+        "placeholder": "未确认时填写“待确认”"
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "steps",
+      "attributes": {
+        "label": "处理措施",
+        "placeholder": "记录适用条件、操作步骤及回退方法"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "validation",
+      "attributes": {
+        "label": "恢复验证",
+        "placeholder": ""
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "prevention",
+      "attributes": {
+        "label": "改进与预防",
+        "placeholder": ""
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "input",
+      "id": "tags",
+      "attributes": {
+        "label": "关键词",
+        "placeholder": "使用分号分隔"
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}

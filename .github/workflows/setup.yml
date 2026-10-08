@@ -1,0 +1,20 @@
+name: 初始化审核标签
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/setup.yml", "scripts/setup-labels.mjs"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/setup-labels.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

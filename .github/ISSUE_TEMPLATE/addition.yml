@@ -1,0 +1,46 @@
+{
+  "name": "补充已有案例",
+  "description": "对已有案例提交验证结果、遗漏步骤或纠错意见",
+  "title": "[案例补充] ",
+  "labels": [
+    "kb-pending"
+  ],
+  "body": [
+    {
+      "type": "dropdown",
+      "id": "kind",
+      "attributes": {
+        "label": "记录类型",
+        "options": [
+          "案例补充"
+        ],
+        "default": 0
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "input",
+      "id": "targetId",
+      "attributes": {
+        "label": "关联案例编号",
+        "placeholder": "例如 CASE-0001、EXP-004 或 GH-12"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "attributes": {
+        "label": "补充内容",
+        "placeholder": "填写补充事实、验证结果及适用条件"
+      },
+      "validations": {
+        "required": true
+      }
+    }
+  ]
+}
